@@ -18,14 +18,20 @@ function load(file, stubs) {
 
 function loadPlugin(os, read = () => ({ status: "loading" })) {
   const reactNative = { Platform: { OS: os }, Text: "Text", TextInput: "TextInput", View: "View" };
+  const translations = {
+    defineTranslations: (definition) => ({ ...definition, message: (key) => definition.resources.en[key] }),
+    useTranslation: (definition) => ({ t: (key) => definition.resources.en[key] }),
+  };
+  const text = load("../client/text.ts", { "@getpaseo/plugin/client": translations });
   const json = load("../client/json.ts", {});
   const panels = load("../client/panels.tsx", {
     "./json": json,
+    "./text": text,
     "react-native": reactNative,
-    "@getpaseo/plugin/client": { useFileText: read, useFileUrl: read },
+    "@getpaseo/plugin/client": { useFileText: read, useFileUrl: read, ...translations },
     "@getpaseo/plugin/client/ui": { Loading: "Loading", DocumentFrame: "DocumentFrame" },
   });
-  const entry = load("../index.client.tsx", { "react-native": reactNative, "./client/panels": panels });
+  const entry = load("../index.client.tsx", { "react-native": reactNative, "./client/panels": panels, "./client/text": text });
   const registered = [];
   entry.default({ addFilePanel: (contribution) => (registered.push(contribution), () => {}) });
   return { registered, byId: Object.fromEntries(registered.map((panel) => [panel.id, panel])) };
@@ -64,6 +70,7 @@ test("every selector passes Paseo's rules and no file is claimed twice", () => {
   for (const { id, title, files } of registered) {
     assert.match(id, /^[a-z][a-z0-9-]*$/);
     assert.ok(title);
+    assert.doesNotMatch(String(title), /[가-힣]/, "the default title is English");
     // Paseo throws on registration for any of these, and only the app would show that error.
     for (const entry of [...files.extensions, ...(files.filenames ?? [])]) {
       assert.ok(entry.length > 0 && entry.trim() === entry && !/[\\/*?]/.test(entry), entry);

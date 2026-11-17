@@ -1,7 +1,8 @@
-import { type PluginFilePanelProps, useFileText, useFileUrl } from "@getpaseo/plugin/client";
+import { type PluginFilePanelProps, useFileText, useFileUrl, useTranslation } from "@getpaseo/plugin/client";
 import { DocumentFrame, Loading } from "@getpaseo/plugin/client/ui";
 import { Text, TextInput, View } from "react-native";
 import { jsonSegments } from "./json";
+import { text } from "./text";
 
 // The text view lays out the whole file at once. 1 MiB is also where Paseo's own phone viewer stops highlighting.
 const MAX_TEXT_BYTES = 1024 * 1024;
@@ -9,13 +10,9 @@ const MAX_TEXT_BYTES = 1024 * 1024;
 const MAX_HIGHLIGHT_BYTES = 200 * 1024;
 
 export function SelectableTextPanel(props: PluginFilePanelProps) {
+  const { t } = useTranslation(text);
   if (props.file.size > MAX_TEXT_BYTES) {
-    return (
-      <Notice
-        color={props.theme.colors.foregroundMuted}
-        message={"1MB가 넘는 파일은 여기서 열지 않습니다.\n탭 메뉴의 '다음으로 열기…'에서 Paseo 기본 뷰어를 고르세요."}
-      />
-    );
+    return <Notice color={props.theme.colors.foregroundMuted} message={t("tooLarge")} />;
   }
   return <FileText {...props} />;
 }

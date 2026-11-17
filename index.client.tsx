@@ -1,6 +1,7 @@
 import type { PluginClientContext } from "@getpaseo/plugin/client";
 import { Platform } from "react-native";
 import { DocumentPanel, SelectableTextPanel } from "./client/panels";
+import { text } from "./client/text";
 
 const ios = Platform.OS === "ios";
 
@@ -27,7 +28,7 @@ export default function contribute(client: PluginClientContext) {
   // Paseo has no PDF panel anywhere. Only the iOS web view also previews Office files.
   client.addFilePanel({
     id: "document",
-    title: "문서",
+    title: text.message("documentPanel"),
     icon: "FileText",
     files: { extensions: ios ? ["pdf", "docx", "xlsx", "pptx"] : ["pdf"] },
     Component: DocumentPanel,
@@ -37,7 +38,7 @@ export default function contribute(client: PluginClientContext) {
   if (ios) {
     client.addFilePanel({
       id: "text",
-      title: "텍스트 선택",
+      title: text.message("textPanel"),
       icon: "TextSelect",
       files: { extensions: TEXT_EXTENSIONS, filenames: TEXT_FILENAMES },
       Component: SelectableTextPanel,
