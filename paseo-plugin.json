@@ -1,0 +1,15 @@
+{
+  "id": "universal-viewer",
+  "name": "Universal viewer",
+  "description": "Opens PDFs in the file tab on every device. On iPhone and iPad it also shows text files as plain text you can select by range, and previews Word, Excel and PowerPoint files.",
+  "translations": {
+    "ko": {
+      "name": "범용 뷰어",
+      "description": "PDF를 모든 기기의 파일 탭에서 연다. 아이폰·아이패드에서는 텍스트 파일을 범위 선택이 되는 원문으로 열고, Word·Excel·PowerPoint 문서를 미리 본다."
+    }
+  },
+  "media": [],
+  "requirements": {
+    "paseo": ">=0.15.0"
+  }
+}
